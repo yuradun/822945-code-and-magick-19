@@ -2,49 +2,61 @@
 
 var CLOUD_WIDTH = 530;
 var CLOUD_HEIGHT = 255;
-var CLOUD_Y = 30;
+
 var CLOUD_X = 80;
+var CLOUD_Y = 30;
 
 var PlayerStatistic_WIDTH = 40;
-var PlayerStatistic_HEIGHT = 150;
-var PlayerStatistic_X = 130;
+var PlayerStatistic_HEIGHT = 160;
+var PlayerStatistic_X = 90;
 var PlayerStatistic_Y = 100;
-var PlayerStatistic_COLOR = 'red';
+
+var INDENT = 10; 
+var INDENT_TEXT = PlayerStatistic_HEIGHT + PlayerStatistic_Y + 15;
 
 
-var COLONS_INDENT = 100;
-var TEXT_X = 130;
-var TEXT_Y = 275
 
-var OtherStatistic_WIDTH = 40;
-var OtherStatistic_HEIGHT = 150;
-var OtherStatistic_X = 130;
-var OtherStatistic_Y = 100;
-var OtherStatistic_COLOR = 'black';
+var getMaxElement = function(arr) {
+  var maxElement = arr[0];
+  
+  for (var i = 0; i < arr.length; i++) {
+    if (arr[i] > maxElement) {
+      maxElement = arr[i];
+    }
+  }
+  
+  return maxElement;
+};
 
 var renderCloud = function(ctx, x, y, color) {
   ctx.fillStyle = color;
-  ctx.fillRect(CLOUD_X, CLOUD_Y, CLOUD_WIDTH, CLOUD_HEIGHT);
+  ctx.fillRect(x, y, CLOUD_WIDTH, CLOUD_HEIGHT);
 };
 
-window.renderStatistics = function(ctx) {
-  renderCloud(ctx, 110, 60, 'rgba(0, 0, 0, 0.3)');
-  renderCloud(ctx, 100, 50, '#fff');
-
+window.renderStatistics = function(ctx, players, times) {
+  renderCloud(ctx, CLOUD_X + INDENT, CLOUD_Y + INDENT, 'rgba(0, 0, 0, 0.3)');
+  renderCloud(ctx, CLOUD_X, CLOUD_Y, '#fff');
   ctx.fillStyle = 'black';
   ctx.fillText('Ура вы победили!', 85, 45);
   ctx.fillStyle = 'black';
   ctx.fillText('Список результатов:', 85, 65);
 
-  ctx.fillStyle = PlayerStatistic_COLOR;
-  ctx.fillText('Вы', TEXT_X, TEXT_Y);
-  ctx.fillRect(PlayerStatistic_X, PlayerStatistic_Y, PlayerStatistic_WIDTH, PlayerStatistic_HEIGHT);
 
-  ctx.fillStyle = OtherStatistic_COLOR;
-  ctx.fillText('Илья', TEXT_X + COLONS_INDENT, TEXT_Y);
-  ctx.fillRect(OtherStatistic_X + COLONS_INDENT, OtherStatistic_Y, OtherStatistic_WIDTH, OtherStatistic_HEIGHT);
+  var maxTime = getMaxElement(times);
 
-  ctx.fillStyle = OtherStatistic_COLOR;
-  ctx.fillText('Кекс', TEXT_X + 2 * COLONS_INDENT, TEXT_Y);
-  ctx.fillRect(OtherStatistic_X + 2 * COLONS_INDENT, OtherStatistic_Y, OtherStatistic_WIDTH, OtherStatistic_HEIGHT);
+
+  for (var i = 1; i < players.length; i++) {
+  	if (players[i] == 'Вы') {
+  		ctx.fillStyle = 'red';
+  		ctx.fillText(players[i], PlayerStatistic_X + (INDENT * 2), INDENT_TEXT);
+  		ctx.fillRect(PlayerStatistic_X + (INDENT * 2), PlayerStatistic_Y, PlayerStatistic_WIDTH, (PlayerStatistic_HEIGHT * times[i]) / maxTime);
+  		INDENT += 40;
+  	}
+  	ctx.fillStyle = 'black';
+  	ctx.fillText(players[i], PlayerStatistic_X + (INDENT * 2), INDENT_TEXT);
+  	ctx.fillRect(PlayerStatistic_X + (INDENT * 2), PlayerStatistic_Y, PlayerStatistic_WIDTH, (PlayerStatistic_HEIGHT * times[i]) / maxTime);
+  	INDENT += 40;
+  }
 };
+  
+
